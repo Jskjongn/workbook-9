@@ -139,4 +139,25 @@ public class JdbcCategoryDao implements CategoryDao{
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void delete(int id) {
+
+        try (
+                Connection connection = dataSource.getConnection();
+
+                PreparedStatement preparedStatement = connection.prepareStatement("""
+                        DELETE FROM
+                            categories
+                        WHERE
+                            CategoryID = ?;
+                        """);
+        ) {
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

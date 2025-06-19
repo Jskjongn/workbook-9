@@ -42,4 +42,9 @@ public class ProductsController {
         productDao.update(id, product);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteProduct(@PathVariable int id) {
+        productDao.delete(id);
+    }
 }
