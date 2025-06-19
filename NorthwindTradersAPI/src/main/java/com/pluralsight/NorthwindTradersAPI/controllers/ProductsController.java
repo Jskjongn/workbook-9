@@ -36,4 +36,10 @@ public class ProductsController {
         return productDao.add(product);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateProduct(@PathVariable int id, @RequestBody Product product) {
+        productDao.update(id, product);
+    }
+
 }

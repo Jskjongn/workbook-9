@@ -35,4 +35,10 @@ public class CategoriesController {
     public Category addCategory(@RequestBody Category category) {
         return categoryDao.add(category);
     }
+
+    @PutMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    public void updateCategory(@PathVariable int id, @RequestBody Category category) {
+        categoryDao.update(id, category);
+    }
 }

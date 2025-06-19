@@ -11,4 +11,6 @@ public interface CategoryDao {
     Category getById(int id);
 
     Category add(Category category);
+
+    void update(int id, Category category);
 }
