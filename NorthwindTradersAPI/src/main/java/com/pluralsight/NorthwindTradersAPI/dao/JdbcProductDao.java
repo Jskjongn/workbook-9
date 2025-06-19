@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,4 +96,37 @@ public class JdbcProductDao implements ProductDao {
         }
         return product;
     }
+
+    @Override
+    public Product add(Product product) {
+
+        try (
+                Connection connection = dataSource.getConnection();
+
+                PreparedStatement preparedStatement = connection.prepareStatement("""
+                        INSERT INTO products (ProductName, CategoryID, UnitPrice)
+                        VALUES
+                        (?, ?, ?);
+                        """, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            preparedStatement.setString(1, product.getProductName());
+            preparedStatement.setInt(2, product.getCategoryId());
+            preparedStatement.setDouble(3, product.getUnitPrice());
+
+            preparedStatement.executeUpdate();
+
+            // gets new primary key of new film and sets it
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next()) {
+                    int newId = keys.getInt(1);
+                    product.setProductId(newId);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return product;
+    }
+
 }
